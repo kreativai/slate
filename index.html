@@ -222,7 +222,7 @@
             <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
           </li>
           <li>
-            <a href="#generative-photos-api-documentation-teams" class="toc-h1 toc-link" data-title="teams">teams</a>
+            <a href="#generative-photos-api-documentation-api" class="toc-h1 toc-link" data-title="api">api</a>
               <ul class="toc-list-h2">
                   <li>
                     <a href="#getteamsmegallerydocumentid" class="toc-h2 toc-link" data-title="getTeamsMeGalleryDocumentid">getTeamsMeGalleryDocumentid</a>
@@ -274,7 +274,7 @@
 <p>Base URLs:</p>
 
 <ul>
-<li><a href="https://us-central1-aivision-app.cloudfunctions.net/">https://us-central1-aivision-app.cloudfunctions.net/</a></li>
+<li><a href="https://app.generative.photos/api/v0">https://app.generative.photos/api/v0</a></li>
 </ul>
 <h1 id='authentication'>Authentication</h1>
 <ul>
@@ -285,7 +285,7 @@
 </ul></li>
 </ul>
 
-<h1 id="generative-photos-api-documentation-teams">teams</h1>
+<h1 id="generative-photos-api-documentation-api">api</h1>
 <h2 id='getteamsmegallerydocumentid'>getTeamsMeGalleryDocumentid</h2>
 <p><a id="opIdgetTeamsMeGalleryDocumentid"></a></p>
 
@@ -308,7 +308,7 @@
 </span><span class="nv">$request_body</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
 
 <span class="k">try</span> <span class="p">{</span>
-    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span><span class="s1">'https://us-central1-aivision-app.cloudfunctions.net/teams/me/gallery/{documentid}'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span><span class="s1">'https://app.generative.photos/api/v0/teams/me/gallery/{documentid}'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
         <span class="s1">'headers'</span> <span class="o">=&gt;</span> <span class="nv">$headers</span><span class="p">,</span>
         <span class="s1">'json'</span> <span class="o">=&gt;</span> <span class="nv">$request_body</span><span class="p">,</span>
        <span class="p">)</span>
@@ -328,7 +328,7 @@
   <span class="s">'authorization'</span><span class="p">:</span> <span class="s">'string'</span>
 <span class="p">}</span>
 
-<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://us-central1-aivision-app.cloudfunctions.net/teams/me/gallery/{documentid}'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://app.generative.photos/api/v0/teams/me/gallery/{documentid}'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span>
 
 <span class="p">},</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="p">)</span>
 
@@ -413,7 +413,7 @@ This operation does not require authentication
 </span><span class="nv">$request_body</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
 
 <span class="k">try</span> <span class="p">{</span>
-    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span><span class="s1">'https://us-central1-aivision-app.cloudfunctions.net/teams/me/gallery/{documentid}/pixels/original/bytes'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span><span class="s1">'https://app.generative.photos/api/v0/teams/me/gallery/{documentid}/pixels/original/bytes'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
         <span class="s1">'headers'</span> <span class="o">=&gt;</span> <span class="nv">$headers</span><span class="p">,</span>
         <span class="s1">'json'</span> <span class="o">=&gt;</span> <span class="nv">$request_body</span><span class="p">,</span>
        <span class="p">)</span>
@@ -433,7 +433,7 @@ This operation does not require authentication
   <span class="s">'authorization'</span><span class="p">:</span> <span class="s">'string'</span>
 <span class="p">}</span>
 
-<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://us-central1-aivision-app.cloudfunctions.net/teams/me/gallery/{documentid}/pixels/original/bytes'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://app.generative.photos/api/v0/teams/me/gallery/{documentid}/pixels/original/bytes'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span>
 
 <span class="p">},</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="p">)</span>
 
@@ -519,7 +519,7 @@ This operation does not require authentication
 </span><span class="nv">$request_body</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
 
 <span class="k">try</span> <span class="p">{</span>
-    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">'POST'</span><span class="p">,</span><span class="s1">'https://us-central1-aivision-app.cloudfunctions.net/teams/me/gallery'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">'POST'</span><span class="p">,</span><span class="s1">'https://app.generative.photos/api/v0/teams/me/gallery'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
         <span class="s1">'headers'</span> <span class="o">=&gt;</span> <span class="nv">$headers</span><span class="p">,</span>
         <span class="s1">'json'</span> <span class="o">=&gt;</span> <span class="nv">$request_body</span><span class="p">,</span>
        <span class="p">)</span>
@@ -540,7 +540,7 @@ This operation does not require authentication
   <span class="s">'authorization'</span><span class="p">:</span> <span class="s">'string'</span>
 <span class="p">}</span>
 
-<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'https://us-central1-aivision-app.cloudfunctions.net/teams/me/gallery'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'https://app.generative.photos/api/v0/teams/me/gallery'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span>
 
 <span class="p">},</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="p">)</span>
 
@@ -639,7 +639,7 @@ This operation does not require authentication
 </span><span class="nv">$request_body</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
 
 <span class="k">try</span> <span class="p">{</span>
-    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">'PUT'</span><span class="p">,</span><span class="s1">'https://us-central1-aivision-app.cloudfunctions.net/teams/me/gallery/{documentid}/faces/{faceid}'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+    <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">'PUT'</span><span class="p">,</span><span class="s1">'https://app.generative.photos/api/v0/teams/me/gallery/{documentid}/faces/{faceid}'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
         <span class="s1">'headers'</span> <span class="o">=&gt;</span> <span class="nv">$headers</span><span class="p">,</span>
         <span class="s1">'json'</span> <span class="o">=&gt;</span> <span class="nv">$request_body</span><span class="p">,</span>
        <span class="p">)</span>
@@ -660,7 +660,7 @@ This operation does not require authentication
   <span class="s">'authorization'</span><span class="p">:</span> <span class="s">'string'</span>
 <span class="p">}</span>
 
-<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'https://us-central1-aivision-app.cloudfunctions.net/teams/me/gallery/{documentid}/faces/{faceid}'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">'https://app.generative.photos/api/v0/teams/me/gallery/{documentid}/faces/{faceid}'</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span>
 
 <span class="p">},</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="p">)</span>
 
