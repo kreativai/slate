@@ -596,7 +596,7 @@ This operation requires API key
 </code></pre>
 <p><code>POST /teams/me/gallery</code></p>
 
-<p>Please upload your images in PNG or JPEG format.</p>
+<p>Please upload your images one at a time in PNG or JPEG format.</p>
 
 <blockquote>
 <p>Body parameter</p>
@@ -720,9 +720,7 @@ This operation requires API key
 
 <p>This endpoint operates as a &quot;fire and forget&quot; operation: variant-generation is queued and is processed asynchronously. You have to <a href="#opIdgetTeamsMeGalleryDocumentid">poll the status</a> of the variant after submitting the variant-generation request.</p>
 
-<p><code>{faceid}</code> indicatates which face (in case the image has multiple faces in it) will be edited.</p>
-
-<p>For <code>{faceid}</code> path-parameter, the only acceptable value currently is <code>default</code>, which is the first face in the image as detected by our algorithm.</p>
+<p><code>{faceid}</code> path-parameter indicatates which face (in case the image has multiple faces in it) will be edited. <strong>For <code>{faceid}</code> path-parameter, the only acceptable value currently is <code>default</code>, which is the first face in the image as detected by our algorithm.</strong></p>
 
 <p>The &quot;direction&quot; of the edit is controlled by the <code>move</code>-parameter inside the request&#39;s body.</p>
 
