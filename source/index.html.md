@@ -1,239 +1,536 @@
 ---
-title: API Reference
+title: generative.photos API Documentation
+language_tabs:
+  - php: Php
+  - python: Python
+toc_footers: []
+includes: []
+search: false
+highlight_theme: darkula
+headingLevel: 2
 
-language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
-  - ruby
-  - python
-  - javascript
-
-toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
-
-includes:
-  - errors
-
-search: true
 ---
 
-# Introduction
+<h1 id="generative-photos-api-documentation">Introduction</h1>
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+> Scroll down for code samples, example requests and responses. Select a language for code samples from the tabs above or the mobile navigation menu.
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+## Overview
 
-This example API documentation page was created with [Slate](https://github.com/slatedocs/slate). Feel free to edit it and use it as a base for your own API's documentation.
+Base URLs:
+
+* <a href="https://app.generative.photos/api/v0">https://app.generative.photos/api/v0</a>
+
+Current API version is 0.1.0
+
+Except for image upload/download, all API-endpoints expect and return JSON.
+
+## Typical Usage
+
+* obtain API key (email us)
+* <a href="#opIdpostTeamsMeGallery">upload your image</a> and note its auto-assigned `id` from the response
+* <a href="#opIdputTeamsMeGalleryDocumentidFacesFaceid">create a new variant</a> using the `id` to build a URL for a `PUT` request and also note the auto-assigned `id` of the new variant from the response
+* poll the <a href="#opIdgetTeamsMeGalleryDocumentid">information</a> about the newly generated variant by using variant's `id` in the URL of the `GET` request
+* continue polling the same endpoint until `data.task.status` in the response is either `complete` or `failed`
+* <a href="#opIdgetTeamsMeGalleryDocumentidPixelsOriginalBytes">download</a> the new image variant (as PNG) once generation is complete
+
+Download a <a href="images/generative.photos API.postman_collection.json">Postman collection</a> and a <a href="images/generative.photos.postman_environment.json">Postman environment</a> corresponding to the sequence of steps above.
 
 # Authentication
 
-> To authorize, use this code:
+* API Key (jwt)
+    - Parameter Name: **Authorization**, in: header. 
 
-```ruby
-require 'kittn'
+Please contact us to obtain or expire/refresh your API key.
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+Currently, the key is static and non-expiring.
+
+<h1 id="generative-photos-api-documentation-api">Endpoints</h1>
+
+## Get image information
+
+<a id="opIdgetTeamsMeGalleryDocumentid"></a>
+
+> Code samples
+
+```php
+<?php
+
+require 'vendor/autoload.php';
+
+$headers = array(
+    'Accept' => '*/*',
+    'authorization' => 'string',
+    
+    );
+
+$client = new \GuzzleHttp\Client();
+
+// Define array of request body.
+$request_body = array();
+
+try {
+    $response = $client->request('GET','https://app.generative.photos/api/v0/teams/me/gallery/{documentid}', array(
+        'headers' => $headers,
+        'json' => $request_body,
+       )
+    );
+    print_r($response->getBody()->getContents());
+ }
+ catch (\GuzzleHttp\Exception\BadResponseException $e) {
+    // handle exception or api errors.
+    print_r($e->getMessage());
+ }
+
+ // ...
+
 ```
 
 ```python
-import kittn
+import requests
+headers = {
+  'Accept': '*/*',
+  'authorization': 'string'
+}
 
-api = kittn.authorize('meowmeowmeow')
+r = requests.get('https://app.generative.photos/api/v0/teams/me/gallery/{documentid}', params={
+
+}, headers = headers)
+
+print r.json()
+
 ```
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
+`GET /teams/me/gallery/{documentid}`
 
-```javascript
-const kittn = require('kittn');
+This endpoint is designed to quickly return the status of the image or image-variant.
 
-let api = kittn.authorize('meowmeowmeow');
-```
+We expect your application to poll it frequently after you <a href="#opIdputTeamsMeGalleryDocumentidFacesFaceid">submit variant-generation request</a>.
 
-> Make sure to replace `meowmeowmeow` with your API key.
+For a new image-variant the typical progression of the `data.task.status` in the response is:
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+* `waiting`
+* `inprogress`
+* `complete`
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
+In case of failure of the generative-algorithm, the progression of the `data.task.status` in the response is:
 
-`Authorization: meowmeowmeow`
+* `waiting`
+* `inprogress`
+* `failed` with `data.task.error.code` containing the error-code
 
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
+<h3 id="getteamsmegallerydocumentid-parameters">Parameters</h3>
 
-# Kittens
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|authorization|header|string|true|none|
+|documentid|path|string|true|none|
 
-## Get All Kittens
+> Example responses
 
-```ruby
-require 'kittn'
+> 200 Response
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
+<h3 id="getteamsmegallerydocumentid-responses">Responses</h3>
 
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[GalleryItem](#schemagalleryitem)|
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+This operation requires API key
 </aside>
 
-## Get a Specific Kitten
+## Download image
 
-```ruby
-require 'kittn'
+<a id="opIdgetTeamsMeGalleryDocumentidPixelsOriginalBytes"></a>
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
+> Code samples
+
+```php
+<?php
+
+require 'vendor/autoload.php';
+
+$headers = array(
+    'Accept' => '*/*',
+    'authorization' => 'string',
+    
+    );
+
+$client = new \GuzzleHttp\Client();
+
+// Define array of request body.
+$request_body = array();
+
+try {
+    $response = $client->request('GET','https://app.generative.photos/api/v0/teams/me/gallery/{documentid}/pixels/original/bytes', array(
+        'headers' => $headers,
+        'json' => $request_body,
+       )
+    );
+    print_r($response->getBody()->getContents());
+ }
+ catch (\GuzzleHttp\Exception\BadResponseException $e) {
+    // handle exception or api errors.
+    print_r($e->getMessage());
+ }
+
+ // ...
+
 ```
 
 ```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+import requests
+headers = {
+  'Accept': '*/*',
+  'authorization': 'string'
 }
+
+r = requests.get('https://app.generative.photos/api/v0/teams/me/gallery/{documentid}/pixels/original/bytes', params={
+
+}, headers = headers)
+
+print r.json()
+
 ```
 
-This endpoint retrieves a specific kitten.
+`GET /teams/me/gallery/{documentid}/pixels/original/bytes`
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+Generated variants are in PNG format.
 
-### HTTP Request
+<h3 id="getteamsmegallerydocumentidpixelsoriginalbytes-parameters">Parameters</h3>
 
-`GET http://example.com/kittens/<ID>`
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|authorization|header|string|true|none|
+|documentid|path|string|true|none|
 
-### URL Parameters
+> Example responses
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+> 200 Response
 
-## Delete a Specific Kitten
+<h3 id="getteamsmegallerydocumentidpixelsoriginalbytes-responses">Responses</h3>
 
-```ruby
-require 'kittn'
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|string|
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
+<aside class="success">
+This operation requires API key
+</aside>
+
+## Upload new original image
+
+<a id="opIdpostTeamsMeGallery"></a>
+
+> Code samples
+
+```php
+<?php
+
+require 'vendor/autoload.php';
+
+$headers = array(
+    'Content-Type' => 'multipart/form-data',
+    'Accept' => '*/*',
+    'authorization' => 'string',
+    
+    );
+
+$client = new \GuzzleHttp\Client();
+
+// Define array of request body.
+$request_body = array();
+
+try {
+    $response = $client->request('POST','https://app.generative.photos/api/v0/teams/me/gallery', array(
+        'headers' => $headers,
+        'json' => $request_body,
+       )
+    );
+    print_r($response->getBody()->getContents());
+ }
+ catch (\GuzzleHttp\Exception\BadResponseException $e) {
+    // handle exception or api errors.
+    print_r($e->getMessage());
+ }
+
+ // ...
+
 ```
 
 ```python
-import kittn
+import requests
+headers = {
+  'Content-Type': 'multipart/form-data',
+  'Accept': '*/*',
+  'authorization': 'string'
+}
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
+r = requests.post('https://app.generative.photos/api/v0/teams/me/gallery', params={
+
+}, headers = headers)
+
+print r.json()
+
 ```
 
-```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
+`POST /teams/me/gallery`
+
+Please upload your images one at a time in PNG or JPEG format.
+
+This endpoint is synchronous. Once it returns, the `data.task.status` of the corresponding document is guaranteed to be `complete`.
+
+> Body parameter
+
+```yaml
+object: string
+
 ```
 
-```javascript
-const kittn = require('kittn');
+<h3 id="postteamsmegallery-parameters">Parameters</h3>
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|authorization|header|string|true|none|
+|body|body|object|false|none|
+|» object|body|string(binary)|true|image file|
+
+> Example responses
+
+> 200 Response
+
+<h3 id="postteamsmegallery-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Successful|[GalleryItem](#schemagalleryitem)|
+
+<aside class="success">
+This operation requires API key
+</aside>
+
+## Create new variant of the image
+
+<a id="opIdputTeamsMeGalleryDocumentidFacesFaceid"></a>
+
+> Code samples
+
+```php
+<?php
+
+require 'vendor/autoload.php';
+
+$headers = array(
+    'Content-Type' => 'application/json',
+    'Accept' => '*/*',
+    'authorization' => 'string',
+    
+    );
+
+$client = new \GuzzleHttp\Client();
+
+// Define array of request body.
+$request_body = array();
+
+try {
+    $response = $client->request('PUT','https://app.generative.photos/api/v0/teams/me/gallery/{documentid}/faces/{faceid}', array(
+        'headers' => $headers,
+        'json' => $request_body,
+       )
+    );
+    print_r($response->getBody()->getContents());
+ }
+ catch (\GuzzleHttp\Exception\BadResponseException $e) {
+    // handle exception or api errors.
+    print_r($e->getMessage());
+ }
+
+ // ...
+
 ```
 
-> The above command returns JSON structured like this:
+```python
+import requests
+headers = {
+  'Content-Type': 'application/json',
+  'Accept': '*/*',
+  'authorization': 'string'
+}
+
+r = requests.put('https://app.generative.photos/api/v0/teams/me/gallery/{documentid}/faces/{faceid}', params={
+
+}, headers = headers)
+
+print r.json()
+
+```
+
+`PUT /teams/me/gallery/{documentid}/faces/{faceid}`
+
+This endpoint operates as a "fire and forget" operation: variant-generation is queued and is processed asynchronously. You have to <a href="#opIdgetTeamsMeGalleryDocumentid">poll the status</a> of the variant after submitting the variant-generation request.
+
+`{faceid}` path-parameter indicatates which face (in case the image has multiple faces in it) will be edited. **For `{faceid}` path-parameter, the only acceptable value currently is `default`, which is the first face in the image as detected by our algorithm.**
+
+The "direction" of the edit is controlled by the `move`-parameter inside the request's body.
+
+This endpoit is idempotent: `move`ing the same face in the same image in the same direction will return the same variant with the same `id`.
+
+> Body parameter
 
 ```json
 {
-  "id": 2,
-  "deleted" : ":("
+  "move": "FemaleAsian"
 }
 ```
 
-This endpoint deletes a specific kitten.
+<h3 id="putteamsmegallerydocumentidfacesfaceid-parameters">Parameters</h3>
 
-### HTTP Request
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|authorization|header|string|true|none|
+|documentid|path|string|true|none|
+|faceid|path|string|true|none|
+|body|body|[Change](#schemachange)|false|none|
 
-`DELETE http://example.com/kittens/<ID>`
+#### Enumerated Values
 
-### URL Parameters
+|Parameter|Value|
+|---|---|
+|faceid|default|
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
+> Example responses
+
+> 200 Response
+
+<h3 id="putteamsmegallerydocumentidfacesfaceid-responses">Responses</h3>
+
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|OK|[GalleryItem](#schemagalleryitem)|
+
+<aside class="success">
+This operation requires API key
+</aside>
+
+# Schemas
+
+<h2 id="tocSerror">error</h2>
+
+<a id="schemaerror"></a>
+
+```json
+{
+  "code": "string"
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|code|string|false|none|none|
+
+<h2 id="tocStask">task</h2>
+
+<a id="schematask"></a>
+
+```json
+{
+  "status": "string",
+  "error": {
+    "code": "string"
+  }
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|status|string|false|none|none|
+|error|[error](#schemaerror)|false|none|none|
+
+<h2 id="tocSdata">data</h2>
+
+<a id="schemadata"></a>
+
+```json
+{
+  "pixels": "string",
+  "task": {
+    "status": "string",
+    "error": {
+      "code": "string"
+    }
+  }
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|pixels|string|false|none|none|
+|task|[task](#schematask)|false|none|none|
+
+<h2 id="tocSgalleryitem">GalleryItem</h2>
+
+<a id="schemagalleryitem"></a>
+
+```json
+{
+  "id": "string",
+  "data": {
+    "pixels": "string",
+    "task": {
+      "status": "string",
+      "error": {
+        "code": "string"
+      }
+    }
+  }
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|id|string|true|none|Team-unique ID|
+|data|[data](#schemadata)|false|none|none|
+
+<h2 id="tocSchange">Change</h2>
+
+<a id="schemachange"></a>
+
+```json
+{
+  "move": "FemaleAsian"
+}
+
+```
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|move|string|true|none|none|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|move|FemaleAsian|
+|move|FemaleBlack|
+|move|FemaleHispanic|
+|move|FemaleWhite|
+|move|MaleAsian|
+|move|MaleBlack|
+|move|MaleHispanic|
+|move|MaleWhite|
 

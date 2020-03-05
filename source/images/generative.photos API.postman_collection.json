@@ -1,0 +1,251 @@
+{
+	"info": {
+		"_postman_id": "99061579-9efb-4913-aeae-c51160616c2f",
+		"name": "generative.photos API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Upload new image to gallery",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8dde4c2a-87ae-4187-a1fd-99dee4d5b828",
+						"exec": [
+							"tests[\"Successful POST request\"] = responseCode.code === 200 || responseCode.code === 201 || responseCode.code === 202;",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"original-image-id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "object",
+							"type": "file",
+							"src": "/Users/dzmitry/Desktop/rosebud/postman/assets/lana.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/teams/me/gallery",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teams",
+						"me",
+						"gallery"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get uploaded image status",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{base_url}}/teams/me/gallery/{{original-image-id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teams",
+						"me",
+						"gallery",
+						"{{original-image-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new image variant (idempotent)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4b40adb2-2d55-43d5-bc9d-7565b21badc5",
+						"exec": [
+							"tests[\"Successful POST request\"] = responseCode.code === 200 || responseCode.code === 201 || responseCode.code === 202;",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"variant-image-id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"move\": \"FemaleAsian\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/teams/me/gallery/{{original-image-id}}/faces/default",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teams",
+						"me",
+						"gallery",
+						"{{original-image-id}}",
+						"faces",
+						"default"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get status of the new variant",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f381fd48-80ce-4ec8-93c3-995f90969771",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Generation complete\"] = jsonData.data.task.status === 'complete';"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{jwt}}"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{base_url}}/teams/me/gallery/{{variant-image-id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teams",
+						"me",
+						"gallery",
+						"{{variant-image-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Full Res bytes (PNG) of the generated variant",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{base_url}}/teams/me/gallery/{{variant-image-id}}/pixels/original/bytes",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teams",
+						"me",
+						"gallery",
+						"{{variant-image-id}}",
+						"pixels",
+						"original",
+						"bytes"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
