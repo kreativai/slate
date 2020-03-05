@@ -297,6 +297,8 @@
 <li>continue polling the same endpoint until <code>data.task.status</code> in the response is either <code>complete</code> or <code>failed</code></li>
 <li><a href="#opIdgetTeamsMeGalleryDocumentidPixelsOriginalBytes">download</a> the new image variant (as PNG) once generation is complete</li>
 </ul>
+
+<p>Download a <a href="images/generative.photos API.postman_collection.json">Postman collection</a> and a <a href="images/generative.photos.postman_environment.json">Postman environment</a> corresponding to the sequence of steps above.</p>
 <h1 id='authentication'>Authentication</h1>
 <ul>
 <li>API Key (jwt)
@@ -597,6 +599,8 @@ This operation requires API key
 <p><code>POST /teams/me/gallery</code></p>
 
 <p>Please upload your images one at a time in PNG or JPEG format.</p>
+
+<p>This endpoint is synchronous. Once it returns, the <code>data.task.status</code> of the corresponding document is guaranteed to be <code>complete</code>.</p>
 
 <blockquote>
 <p>Body parameter</p>
