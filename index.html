@@ -196,7 +196,7 @@
   color: #f92672;
 }
     </style>
-    <link href="stylesheets/screen-a1ce949a.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/screen-2f844318.css" rel="stylesheet" media="screen" />
     <link href="stylesheets/print-bccf8c07.css" rel="stylesheet" media="print" />
       <script src="javascripts/all_nosearch-c275c2f6.js"></script>
   </head>
@@ -216,25 +216,30 @@
         </div>
       <ul id="toc" class="toc-list-h1">
           <li>
-            <a href="#generative-photos-api-documentation" class="toc-h1 toc-link" data-title="generative.photos API Documentation v0.1.0">generative.photos API Documentation v0.1.0</a>
+            <a href="#generative-photos-api-documentation" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#typical-usage" class="toc-h2 toc-link" data-title="Typical Usage">Typical Usage</a>
+                  </li>
+              </ul>
           </li>
           <li>
             <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
           </li>
           <li>
-            <a href="#generative-photos-api-documentation-api" class="toc-h1 toc-link" data-title="api">api</a>
+            <a href="#generative-photos-api-documentation-api" class="toc-h1 toc-link" data-title="Endpoints">Endpoints</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#getteamsmegallerydocumentid" class="toc-h2 toc-link" data-title="getTeamsMeGalleryDocumentid">getTeamsMeGalleryDocumentid</a>
+                    <a href="#get-image-information" class="toc-h2 toc-link" data-title="Get image information">Get image information</a>
                   </li>
                   <li>
-                    <a href="#getteamsmegallerydocumentidpixelsoriginalbytes" class="toc-h2 toc-link" data-title="getTeamsMeGalleryDocumentidPixelsOriginalBytes">getTeamsMeGalleryDocumentidPixelsOriginalBytes</a>
+                    <a href="#download-image" class="toc-h2 toc-link" data-title="Download image">Download image</a>
                   </li>
                   <li>
-                    <a href="#postteamsmegallery" class="toc-h2 toc-link" data-title="postTeamsMeGallery">postTeamsMeGallery</a>
+                    <a href="#upload-new-original-image" class="toc-h2 toc-link" data-title="Upload new original image">Upload new original image</a>
                   </li>
                   <li>
-                    <a href="#putteamsmegallerydocumentidfacesfaceid" class="toc-h2 toc-link" data-title="putTeamsMeGalleryDocumentidFacesFaceid">putTeamsMeGalleryDocumentidFacesFaceid</a>
+                    <a href="#create-new-variant-of-the-image" class="toc-h2 toc-link" data-title="Create new variant of the image">Create new variant of the image</a>
                   </li>
               </ul>
           </li>
@@ -265,7 +270,7 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="generative-photos-api-documentation">generative.photos API Documentation v0.1.0</h1>
+        <h1 id="generative-photos-api-documentation">Introduction</h1>
 
 <blockquote>
 <p>Scroll down for code samples, example requests and responses. Select a language for code samples from the tabs above or the mobile navigation menu.</p>
@@ -276,6 +281,17 @@
 <ul>
 <li><a href="https://app.generative.photos/api/v0">https://app.generative.photos/api/v0</a></li>
 </ul>
+
+<p>Current version API version is 0.1.0</p>
+<h2 id='typical-usage'>Typical Usage</h2>
+<ul>
+<li>obtain API key (email us)</li>
+<li><a href="#opIdpostTeamsMeGallery">upload your image</a> and note its auto-assigned <code>id</code> from the response</li>
+<li><a href="#opIdputTeamsMeGalleryDocumentidFacesFaceid">create a new variant</a> using the <code>id</code> to build a URL for a <code>PUT</code> request and also note the auto-assigned <code>id</code> of the new variant from the response</li>
+<li>poll the <a href="#opIdgetTeamsMeGalleryDocumentid">information</a> about the newly generated variant by using variant&#39;s <code>id</code> in the URL of the <code>GET</code> request</li>
+<li>continue polling the same endpoint until <code>data.task.status</code> in the response is either <code>complete</code> or <code>failed</code></li>
+<li><a href="#opIdgetTeamsMeGalleryDocumentidPixelsOriginalBytes">download</a> the new image variant (as PNG) once generation is complete</li>
+</ul>
 <h1 id='authentication'>Authentication</h1>
 <ul>
 <li>API Key (jwt)
@@ -285,8 +301,10 @@
 </ul></li>
 </ul>
 
-<h1 id="generative-photos-api-documentation-api">api</h1>
-<h2 id='getteamsmegallerydocumentid'>getTeamsMeGalleryDocumentid</h2>
+<p>Please contact us to obtain your API key.</p>
+
+<h1 id="generative-photos-api-documentation-api">Endpoints</h1>
+<h2 id='get-image-information'>Get image information</h2>
 <p><a id="opIdgetTeamsMeGalleryDocumentid"></a></p>
 
 <blockquote>
@@ -389,9 +407,9 @@
 </tbody></table>
 
 <aside class="success">
-This operation does not require authentication
+This operation requires API key
 </aside>
-<h2 id='getteamsmegallerydocumentidpixelsoriginalbytes'>getTeamsMeGalleryDocumentidPixelsOriginalBytes</h2>
+<h2 id='download-image'>Download image</h2>
 <p><a id="opIdgetTeamsMeGalleryDocumentidPixelsOriginalBytes"></a></p>
 
 <blockquote>
@@ -494,9 +512,9 @@ This operation does not require authentication
 </tbody></table>
 
 <aside class="success">
-This operation does not require authentication
+This operation requires API key
 </aside>
-<h2 id='postteamsmegallery'>postTeamsMeGallery</h2>
+<h2 id='upload-new-original-image'>Upload new original image</h2>
 <p><a id="opIdpostTeamsMeGallery"></a></p>
 
 <blockquote>
@@ -614,9 +632,9 @@ This operation does not require authentication
 </tbody></table>
 
 <aside class="success">
-This operation does not require authentication
+This operation requires API key
 </aside>
-<h2 id='putteamsmegallerydocumentidfacesfaceid'>putTeamsMeGalleryDocumentidFacesFaceid</h2>
+<h2 id='create-new-variant-of-the-image'>Create new variant of the image</h2>
 <p><a id="opIdputTeamsMeGalleryDocumentidFacesFaceid"></a></p>
 
 <blockquote>
@@ -676,6 +694,8 @@ This operation does not require authentication
   </span><span class="s2">"move"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FemaleAsian"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<p>For <code>{faceid}</code> path-parameter, the only acceptable value currently is <code>default</code>, which is the first face in the image as detected by our system.</p>
+
 <h3 id="putteamsmegallerydocumentidfacesfaceid-parameters">Parameters</h3>
 
 <table><thead>
@@ -754,7 +774,7 @@ This operation does not require authentication
 </tbody></table>
 
 <aside class="success">
-This operation does not require authentication
+This operation requires API key
 </aside>
 <h1 id='schemas'>Schemas</h1>
 <h2 id="tocSerror">error</h2>
