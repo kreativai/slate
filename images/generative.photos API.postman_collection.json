@@ -15,8 +15,13 @@
 						"exec": [
 							"tests[\"Successful POST request\"] = responseCode.code === 200 || responseCode.code === 201 || responseCode.code === 202;",
 							"",
-							"var jsonData = JSON.parse(responseBody);",
-							"postman.setEnvironmentVariable(\"original-image-id\", jsonData.id);"
+							"if (tests[\"Successful POST request\"]) {",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    postman.setEnvironmentVariable(\"original-image-id\", jsonData.id);",
+							"}",
+							"else {",
+							"    postman.setNextRequest(null)",
+							"}"
 						],
 						"type": "text/javascript"
 					}
@@ -63,6 +68,24 @@
 		},
 		{
 			"name": "Get uploaded image status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dfe65f16-c6e5-40ec-8336-81ea2c8705d6",
+						"exec": [
+							"tests[\"Successful GET request\"] = responseCode.code === 200;",
+							"",
+							"if (tests[\"Successful GET request\"]) {",
+							"}",
+							"else {",
+							"    postman.setNextRequest(null)",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -110,8 +133,15 @@
 						"exec": [
 							"tests[\"Successful POST request\"] = responseCode.code === 200 || responseCode.code === 201 || responseCode.code === 202;",
 							"",
-							"var jsonData = JSON.parse(responseBody);",
-							"postman.setEnvironmentVariable(\"variant-image-id\", jsonData.id);"
+							"if (tests[\"Successful POST request\"]) {",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    postman.setEnvironmentVariable(\"variant-image-id\", jsonData.id);",
+							"}",
+							"else {",
+							"    postman.setNextRequest(null)",
+							"}",
+							"",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -166,8 +196,34 @@
 					"script": {
 						"id": "f381fd48-80ce-4ec8-93c3-995f90969771",
 						"exec": [
-							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"Generation complete\"] = jsonData.data.task.status === 'complete';"
+							"tests[\"Successful GET request\"] = responseCode.code === 200;",
+							"",
+							"const maxNumberOfTries = 10; // your max number of tries",
+							"const sleepBetweenTries = 20000; // your interval between attempts",
+							"",
+							"if (!pm.environment.get(\"tries\")) {",
+							"    pm.environment.set(\"tries\", 1);",
+							"}",
+							"",
+							"",
+							"const jsonData = pm.response.json();",
+							"",
+							"if ((jsonData.data.task.status !== 'complete') && (pm.environment.get(\"tries\") < maxNumberOfTries)) {",
+							"     const tries = parseInt(pm.environment.get(\"tries\"), 10);",
+							"     pm.environment.set(\"tries\", tries + 1);",
+							"     setTimeout(function() {}, sleepBetweenTries);",
+							"     postman.setNextRequest(request.name);",
+							" } else {",
+							"     pm.environment.unset(\"tries\");",
+							"",
+							"     tests[\"Generation complete\"] = jsonData.data.task.status === 'complete';",
+							"     ",
+							"     if (tests[\"Generation complete\"]) {",
+							"     }",
+							"     else {",
+							"         postman.setNextRequest(null)",
+							"     }",
+							"}"
 						],
 						"type": "text/javascript"
 					}
@@ -212,6 +268,25 @@
 		},
 		{
 			"name": "Get Full Res bytes (PNG) of the generated variant",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2367b392-4a79-4ff6-a83c-acab6998e711",
+						"exec": [
+							"tests[\"Successful GET request\"] = responseCode.code === 200;",
+							"",
+							"if (tests[\"Successful GET request\"]) {",
+							"}",
+							"else {",
+							"    postman.setNextRequest(null)",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -241,6 +316,67 @@
 						"pixels",
 						"original",
 						"bytes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Archive original",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4b40adb2-2d55-43d5-bc9d-7565b21badc5",
+						"exec": [
+							"tests[\"Successful PATCH request\"] = responseCode.code === 200 || responseCode.code === 201 || responseCode.code === 202;",
+							"",
+							"if (tests[\"Successful PATCH request\"]) {",
+							"}",
+							"else {",
+							"    postman.setNextRequest(null)",
+							"}",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"status\": {\n\t\t\"archived\": true\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/teams/me/gallery/{{original-image-id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teams",
+						"me",
+						"gallery",
+						"{{original-image-id}}"
 					]
 				}
 			},

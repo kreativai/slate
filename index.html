@@ -598,7 +598,7 @@ This operation requires API key
 </code></pre>
 <p><code>POST /teams/me/gallery</code></p>
 
-<p>Please upload your images one at a time in PNG or JPEG format.</p>
+<p>Please upload your images one at a time in PNG or JPEG format. You must specify non-empty filename as part of the <code>form-data</code> body.</p>
 
 <p>This endpoint is synchronous. Once it returns, the <code>data.task.status</code> of the corresponding document is guaranteed to be <code>complete</code>.</p>
 
