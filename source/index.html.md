@@ -277,7 +277,7 @@ print r.json()
 
 `POST /teams/me/gallery`
 
-Please upload your images one at a time in PNG or JPEG format.
+Please upload your images one at a time in PNG or JPEG format. You must specify non-empty filename as part of the `form-data` body.
 
 This endpoint is synchronous. Once it returns, the `data.task.status` of the corresponding document is guaranteed to be `complete`.
 
