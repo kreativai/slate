@@ -245,7 +245,153 @@
 				}
 			},
 			"response": []
-		}
+		},
+		{
+			"name": "Create new image variant (pca directional slider)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4b40adb2-2d55-43d5-bc9d-7565b21badc5",
+						"exec": [
+							"tests[\"Successful POST request\"] = responseCode.code === 200 || responseCode.code === 201 || responseCode.code === 202;",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"variant-image-id\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"move\": \"FemaleAsian\", \n\t\"param\": -0.6}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/teams/me/gallery/{{original-image-id}}/faces/default",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teams",
+						"me",
+						"gallery",
+						"{{original-image-id}}",
+						"faces",
+						"default"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get status of the new pca directional variant",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f381fd48-80ce-4ec8-93c3-995f90969771",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Generation complete\"] = jsonData.data.task.status === 'complete';"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{jwt}}"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{base_url}}/teams/me/gallery/{{variant-image-id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teams",
+						"me",
+						"gallery",
+						"{{variant-image-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Full Res bytes (PNG) of the generated pca directional variant",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{base_url}}/teams/me/gallery/{{variant-image-id}}/pixels/original/bytes",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"teams",
+						"me",
+						"gallery",
+						"{{variant-image-id}}",
+						"pixels",
+						"original",
+						"bytes"
+					]
+				}
+			},
+			"response": []
+		},
 	],
 	"protocolProfileBehavior": {}
 }
