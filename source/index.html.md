@@ -374,13 +374,22 @@ This endpoint operates as a "fire and forget" operation: variant-generation is q
 
 The "direction" of the edit is controlled by the `move`-parameter inside the request's body.
 
-This endpoit is idempotent: `move`ing the same face in the same image in the same direction will return the same variant with the same `id`.
+The "magnitude" of the directional edit is controlled by the `param` float optional parameter inside the requests body and is set default to 1.0
+
+This endpoint is idempotent: `move`ing the same face in the same image in the same direction with the same magnitude will return the same variant with the same `id`.
 
 > Body parameter
 
 ```json
+//Example 1
 {
   "move": "FemaleAsian"
+}
+
+//Example 2
+{
+  "move": "smile",
+  "param": -0.6
 }
 ```
 
@@ -509,8 +518,15 @@ This operation requires API key
 <a id="schemachange"></a>
 
 ```json
+//Ex. 1
 {
   "move": "FemaleAsian"
+}
+
+//Ex. 2
+{
+  "move": "smile",
+  "param": -0.6
 }
 
 ```
@@ -520,6 +536,7 @@ This operation requires API key
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |move|string|true|none|none|
+|param|float|false|none|defaults to 1.0|
 
 #### Enumerated Values
 
@@ -533,4 +550,7 @@ This operation requires API key
 |move|MaleBlack|
 |move|MaleHispanic|
 |move|MaleWhite|
+|move|smile|
+|move|gender|
+|move|age|
 
