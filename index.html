@@ -292,6 +292,8 @@
 <ul>
 <li>obtain API key (email us)</li>
 <li><a href="#opIdpostTeamsMeGallery">upload your image</a> and note its auto-assigned <code>id</code> from the response</li>
+<li>poll the <a href="#opIdgetTeamsMeGalleryDocumentid">information</a> about the uploaded image using <code>id</code> in the URL of the <code>GET</code> request</li>
+<li>continue polling the same endpoint until <code>data.faces</code> in the response contains information about relative face-rectangles</li>
 <li><a href="#opIdputTeamsMeGalleryDocumentidFacesFaceid">create a new variant</a> using the <code>id</code> to build a URL for a <code>PUT</code> request and also note the auto-assigned <code>id</code> of the new variant from the response</li>
 <li>poll the <a href="#opIdgetTeamsMeGalleryDocumentid">information</a> about the newly generated variant by using variant&#39;s <code>id</code> in the URL of the <code>GET</code> request</li>
 <li>continue polling the same endpoint until <code>data.task.status</code> in the response is either <code>complete</code> or <code>failed</code></li>
@@ -383,6 +385,8 @@
 <li><code>inprogress</code></li>
 <li><code>failed</code> with <code>data.task.error.code</code> containing the error-code</li>
 </ul>
+
+<p>When uploading new image, its <code>data.task.status</code> is immediately complete, but it may take a few seconds for our systems to recognize all faces on the image.</p>
 
 <h3 id="getteamsmegallerydocumentid-parameters">Parameters</h3>
 
@@ -724,17 +728,26 @@ This operation requires API key
 
 <p>This endpoint operates as a &quot;fire and forget&quot; operation: variant-generation is queued and is processed asynchronously. You have to <a href="#opIdgetTeamsMeGalleryDocumentid">poll the status</a> of the variant after submitting the variant-generation request.</p>
 
-<p><code>{faceid}</code> path-parameter indicatates which face (in case the image has multiple faces in it) will be edited. <strong>For <code>{faceid}</code> path-parameter, the only acceptable value currently is <code>default</code>, which is the first face in the image as detected by our algorithm.</strong></p>
+<p><code>{faceid}</code> path-parameter indicatates which face (in case the image has multiple faces in it) will be edited. For <code>{faceid}</code> path-parameter you can use either a numeric face index (zero-indexed, corresponding to element from <code>data.faces</code> list returned by <a href="#opIdgetTeamsMeGalleryDocumentid">document status endpoint</a>) or <code>default</code> (which is equivalent to <code>0</code>&#39;th face index).</p>
 
 <p>The &quot;direction&quot; of the edit is controlled by the <code>move</code>-parameter inside the request&#39;s body.</p>
 
-<p>This endpoit is idempotent: <code>move</code>ing the same face in the same image in the same direction will return the same variant with the same <code>id</code>.</p>
+<p>The &quot;magnitude&quot; of the directional edit is controlled by the <code>param</code> float optional parameter inside the requests body and is set default to 1.0</p>
+
+<p>This endpoint is idempotent: <code>move</code>ing the same face in the same image in the same direction with the same magnitude will return the same variant with the same <code>id</code>.</p>
 
 <blockquote>
 <p>Body parameter</p>
 </blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<pre class="highlight json tab-json"><code><span class="err">//Example</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">{</span><span class="w">
   </span><span class="s2">"move"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FemaleAsian"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="err">//Example</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="s2">"move"</span><span class="p">:</span><span class="w"> </span><span class="s2">"smile"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"param"</span><span class="p">:</span><span class="w"> </span><span class="mf">-0.6</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <h3 id="putteamsmegallerydocumentidfacesfaceid-parameters">Parameters</h3>
@@ -964,8 +977,15 @@ This operation requires API key
 <h2 id="tocSchange">Change</h2>
 
 <p><a id="schemachange"></a></p>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+<pre class="highlight json tab-json"><code><span class="err">//Ex.</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">{</span><span class="w">
   </span><span class="s2">"move"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FemaleAsian"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="err">//Ex.</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="s2">"move"</span><span class="p">:</span><span class="w"> </span><span class="s2">"smile"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"param"</span><span class="p">:</span><span class="w"> </span><span class="mf">-0.6</span><span class="w">
 </span><span class="p">}</span><span class="w">
 
 </span></code></pre><h3 id='properties-5'>Properties</h3>
@@ -984,6 +1004,13 @@ This operation requires API key
 <td>true</td>
 <td>none</td>
 <td>none</td>
+</tr>
+<tr>
+<td>param</td>
+<td>float</td>
+<td>false</td>
+<td>none</td>
+<td>defaults to 1.0</td>
 </tr>
 </tbody></table>
 <h4 id='enumerated-values-2'>Enumerated Values</h4>
@@ -1024,6 +1051,18 @@ This operation requires API key
 <tr>
 <td>move</td>
 <td>MaleWhite</td>
+</tr>
+<tr>
+<td>move</td>
+<td>smile</td>
+</tr>
+<tr>
+<td>move</td>
+<td>gender</td>
+</tr>
+<tr>
+<td>move</td>
+<td>age</td>
 </tr>
 </tbody></table>
 
