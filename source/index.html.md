@@ -29,6 +29,8 @@ Except for image upload/download, all API-endpoints expect and return JSON.
 
 * obtain API key (email us)
 * <a href="#opIdpostTeamsMeGallery">upload your image</a> and note its auto-assigned `id` from the response
+* poll the <a href="#opIdgetTeamsMeGalleryDocumentid">information</a> about the uploaded image using `id` in the URL of the `GET` request
+* continue polling the same endpoint until `data.faces` in the response contains information about relative face-rectangles
 * <a href="#opIdputTeamsMeGalleryDocumentidFacesFaceid">create a new variant</a> using the `id` to build a URL for a `PUT` request and also note the auto-assigned `id` of the new variant from the response
 * poll the <a href="#opIdgetTeamsMeGalleryDocumentid">information</a> about the newly generated variant by using variant's `id` in the URL of the `GET` request
 * continue polling the same endpoint until `data.task.status` in the response is either `complete` or `failed`
@@ -118,6 +120,8 @@ In case of failure of the generative-algorithm, the progression of the `data.tas
 * `waiting`
 * `inprogress`
 * `failed` with `data.task.error.code` containing the error-code
+
+When uploading new image, its `data.task.status` is immediately complete, but it may take a few seconds for our systems to recognize all faces on the image.
 
 <h3 id="getteamsmegallerydocumentid-parameters">Parameters</h3>
 
@@ -370,17 +374,26 @@ print r.json()
 
 This endpoint operates as a "fire and forget" operation: variant-generation is queued and is processed asynchronously. You have to <a href="#opIdgetTeamsMeGalleryDocumentid">poll the status</a> of the variant after submitting the variant-generation request.
 
-`{faceid}` path-parameter indicatates which face (in case the image has multiple faces in it) will be edited. **For `{faceid}` path-parameter, the only acceptable value currently is `default`, which is the first face in the image as detected by our algorithm.**
+`{faceid}` path-parameter indicatates which face (in case the image has multiple faces in it) will be edited. For `{faceid}` path-parameter you can use either a numeric face index (zero-indexed, corresponding to element from `data.faces` list returned by <a href="#opIdgetTeamsMeGalleryDocumentid">document status endpoint</a>) or `default` (which is equivalent to `0`'th face index).
 
 The "direction" of the edit is controlled by the `move`-parameter inside the request's body.
 
-This endpoit is idempotent: `move`ing the same face in the same image in the same direction will return the same variant with the same `id`.
+The "magnitude" of the directional edit is controlled by the `param` float optional parameter inside the requests body and is set default to 1.0
+
+This endpoint is idempotent: `move`ing the same face in the same image in the same direction with the same magnitude will return the same variant with the same `id`.
 
 > Body parameter
 
 ```json
+//Example 1
 {
   "move": "FemaleAsian"
+}
+
+//Example 2
+{
+  "move": "smile",
+  "param": -0.6
 }
 ```
 
@@ -509,8 +522,15 @@ This operation requires API key
 <a id="schemachange"></a>
 
 ```json
+//Ex. 1
 {
   "move": "FemaleAsian"
+}
+
+//Ex. 2
+{
+  "move": "smile",
+  "param": -0.6
 }
 
 ```
@@ -520,6 +540,7 @@ This operation requires API key
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |move|string|true|none|none|
+|param|float|false|none|defaults to 1.0|
 
 #### Enumerated Values
 
@@ -533,4 +554,7 @@ This operation requires API key
 |move|MaleBlack|
 |move|MaleHispanic|
 |move|MaleWhite|
+|move|smile|
+|move|gender|
+|move|age|
 
